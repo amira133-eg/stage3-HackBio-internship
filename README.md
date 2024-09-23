@@ -245,5 +245,5 @@
     )
     }
     #
-    # Run the app
+# Run the app
     shinyApp(ui = ui, server = server)
