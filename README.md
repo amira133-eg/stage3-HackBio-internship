@@ -2,20 +2,14 @@
  Learning Track : Frontend Bioinformatics    
  
 # Loading required libraries:
-# shiny: for building web applications
-# shinythemes: to apply themes for UI (User Interface)
-# leaflet: for interactive maps
-# ggplot2: for creating plots and data visualizations
-# dplyr: for data manipulation (e.g., filtering, summarizing)
-# readxl: to read Excel files
-# DT: to render DataTables in the UI
-library(shiny)
-library(shinythemes)
-library(leaflet)
-library(ggplot2)
-library(dplyr)
-library(readxl)
-library(DT)
+
+library(shiny)  # shiny: for building web applications
+library(shinythemes)   # shinythemes: to apply themes for UI (User Interface)
+library(leaflet)  # leaflet: for interactive maps
+library(ggplot2) # ggplot2: for creating plots and data visualizations
+library(dplyr) # dplyr: for data manipulation (e.g., filtering, summarizing)
+library(readxl) # readxl: to read Excel files
+library(DT) # DT: to render DataTables in the UI
 
 # Reading the Excel file into R. The dataset contains cholera data.
 my_data <- read_excel("D:/stage3/cholera - geo.xlsx")
