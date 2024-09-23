@@ -1,5 +1,5 @@
 # Cholera Data Insights (R Shiny web application)
-#
+
 # Loading required libraries:
 
     #library(shiny) # shiny: for building web applications 
