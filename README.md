@@ -35,60 +35,56 @@ my_data_df <- as.data.frame(my_data)  # Converting the dataset to a data frame f
 country_summary <- my_data_df %>%   #Summarizing the dataset by countries to calculate total cases, fatalities, and average geographic locations (longitude and latitude)    
   group_by(Countries) %>%
   summarise(
-    TotalCases = sum(Cases, na.rm = TRUE),  # Summing total cholera cases for each country
-    TotalFatalities = sum(Fatalities, na.rm = TRUE),  # Summing total fatalities for each country
-    Longitude = mean(Longitude, na.rm = TRUE),  # Averaging longitude values for map display
-    Latitude = mean(Latitude, na.rm = TRUE)  # Averaging latitude values for map display
+    TotalCases = sum(Cases, na.rm = TRUE),                   # Summing total cholera cases for each country
+    TotalFatalities = sum(Fatalities, na.rm = TRUE),         # Summing total fatalities for each country
+    Longitude = mean(Longitude, na.rm = TRUE),               # Averaging longitude values for map display
+    Latitude = mean(Latitude, na.rm = TRUE)                  # Averaging latitude values for map display
   )
 
 # UI (User Interface) part of the app
 
 
 ui <- fluidPage(
-  # Apply "cerulean" theme from shinythemes to give the app a specific look
-  theme = shinytheme("cerulean"),
-  
+  theme = shinytheme("cerulean"),                # Apply "cerulean" theme from shinythemes to give the app a specific look
+
   #
-  #Title section with light blue background and centered text
   tags$div(style = "text-align: center; background-color: lightblue; padding: 20px; border-radius: 10px;",
-           h2("Cholera Data Insights")),
+           h2("Cholera Data Insights")),       
+           #Title section with light blue background and centered text  
   
   # 
   #Creating a navigation bar for switching between different pages
+
   navbarPage(
     "",
     tabPanel("Home",  # First tab for the map
+    
              sidebarPanel(
                # Dropdown for selecting a country, defaulting to "All Countries"
                selectInput("selectCountry", "Choose a country:", choices = c("All Countries", unique(my_data_df$Countries)))
              ),
+             
              mainPanel(
-               
-               #Leaflet map to display countries and cholera data
-               leafletOutput("world_map")
+               leafletOutput("world_map")            #Leaflet map to display countries and cholera data
              )
-    ),
+    )
+    ,
     tabPanel("Data",  # Second tab for the data and statistics
              sidebarPanel(
+               selectInput("selectCountryData", "Choose a country:", choices = c("All Countries", unique(my_data_df$Countries))),       #Dropdown for selecting a country for data analysis      
                
-               #Dropdown for selecting a country for data analysis
-               selectInput("selectCountryData", "Choose a country:", choices = c("All Countries", unique(my_data_df$Countries))),
-               #Heading and dropdown for selecting a year range
                tags$h3("Select Year Range:"),
                selectInput("selectYearRange", "Choose a year range:",
+               
                            choices = c("All Years", "1949-1959", "1960-1969", "1970-1979", "1980-1989",
-                                       "1990-1999", "2000-2009", "2010-2016"))
+                                       "1990-1999", "2000-2009", "2010-2016"))                           #Heading and dropdown for selecting a year range
              ),
              mainPanel(
-               
-               #Tabbed panel for different types of data and visualizations
                tabsetPanel(
-                 tabPanel("Statistics", 
-                          # Displaying the total cases and fatalities as text
-                          verbatimTextOutput("total_cases"),
-                          verbatimTextOutput("fatalities"),
-                          # Displaying the outbreak plot
-                          plotOutput("outbreak_plot", height = "250px", width = "90%")
+                 tabPanel("Statistics",   #Tabbed panel for different types of data and visualizations
+                          
+                          
+                          plotOutput("outbreak_plot", height = "250px", width = "90%")      # Displaying the outbreak plot     
                  ),
                  tabPanel("Number of Cases", 
                           #Displaying a plot for number of cases
@@ -111,6 +107,7 @@ ui <- fluidPage(
              )
     )
   )
+  
 )
 
 # Server logic part of the app
