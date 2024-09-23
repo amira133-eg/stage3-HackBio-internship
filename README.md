@@ -1,62 +1,64 @@
 # Cholera Data Insights (R Shiny web application)
-
-
+#
 # Loading required libraries:
 
-library(shiny)  # shiny: for building web applications
+    #library(shiny) # shiny: for building web applications 
+    #library(shinythemes)   # shinythemes: to apply themes for UI (User Interface)
+
+    library(shinythemes)   # shinythemes: to apply themes for UI (User Interface)
 
 
-library(shinythemes)   # shinythemes: to apply themes for UI (User Interface)
+     library(leaflet)  # leaflet: for interactive maps
 
 
-library(leaflet)  # leaflet: for interactive maps
+    library(ggplot2) # ggplot2: for creating plots and data visualizations
 
 
-library(ggplot2) # ggplot2: for creating plots and data visualizations
+    library(dplyr) # dplyr: for data manipulation (e.g., filtering, summarizing)
 
 
-library(dplyr) # dplyr: for data manipulation (e.g., filtering, summarizing)
+    library(readxl) # readxl: to read Excel files
 
 
-library(readxl) # readxl: to read Excel files
+    library(DT) # DT: to render DataTables in the UI
 
 
-library(DT) # DT: to render DataTables in the UI
+    #
+    my_data <- read_excel("D:/stage3/cholera - geo.xlsx")  # to Read the Excel file into R. The dataset contains cholera data.
 
+    #
+    my_data_df <- as.data.frame(my_data)  # Converting the dataset to a data frame for easier manipulation.
 
-#
-my_data <- read_excel("D:/stage3/cholera - geo.xlsx")  # to Read the Excel file into R. The dataset contains cholera data.
+    # 
 
-#
-my_data_df <- as.data.frame(my_data)  # Converting the dataset to a data frame for easier manipulation.
-
-# 
-
-country_summary <- my_data_df %>%   #Summarizing the dataset by countries to calculate total cases, fatalities, and average geographic locations (longitude and latitude)    
-  group_by(Countries) %>%
-  summarise(
+    country_summary <- my_data_df %>%   #Summarizing the dataset by countries to calculate total cases, fatalities, and average geographic locations (longitude and latitude)    
+    group_by(Countries) %>%
+    summarise(
     TotalCases = sum(Cases, na.rm = TRUE),                   # Summing total cholera cases for each country
     TotalFatalities = sum(Fatalities, na.rm = TRUE),         # Summing total fatalities for each country
     Longitude = mean(Longitude, na.rm = TRUE),               # Averaging longitude values for map display
     Latitude = mean(Latitude, na.rm = TRUE)                  # Averaging latitude values for map display
-  )
-
+    )
+#
 # UI (User Interface) part of the app
 
 
-ui <- fluidPage(
-  theme = shinytheme("cerulean"),                # Apply "cerulean" theme from shinythemes to give the app a specific look
+    ui <- fluidPage(
+    theme = shinytheme("cerulean"),                # Apply "cerulean" theme from shinythemes to give the app a specific look
 
-  #
-  tags$div(style = "text-align: center; background-color: lightblue; padding: 20px; border-radius: 10px;",
+  
+    tags$div(style = "text-align: center; background-color: lightblue; padding: 20px; border-radius: 10px;",
            h2("Cholera Data Insights")),       
            #Title section with light blue background and centered text  
   
-  # 
-  #Creating a navigation bar for switching between different pages
 
-  navbarPage(
+    #Creating a navigation bar for switching between different pages
+
+
+    navbarPage(
+  
     "",
+    
     tabPanel("Home",  # First tab for the map
     
              sidebarPanel(
@@ -106,17 +108,19 @@ ui <- fluidPage(
                )
              )
     )
-  )
+    )
   
-)
-
+    )
+    
+#
 # Server logic part of the app
 
 
-server <- function(input, output, session) {
-  
-  #Reactive expression to filter data based on selected country and year range
-  filtered_data <- reactive({
+    server <- function(input,output, session){   
+    
+    filtered_data <- reactive({                             
+       #Reactive expression to filter data based on selected country and year range
+
     req(input$selectCountryData)  #Ensures a country is selected before filtering data
     
     filtered <- my_data_df  # Start with the full dataset
@@ -135,22 +139,22 @@ server <- function(input, output, session) {
     }
     
     return(filtered)  # Return the filtered data
-  })
-  #
-  #Render the total number of cases for the selected country and year range
-  output$total_cases <- renderText({
+     })
+    #
+    
+    output$total_cases <- renderText({
     total_cases <- sum(filtered_data()$Cases, na.rm = TRUE)  # Summing up cases
     paste("Total Cases:", total_cases)  # Displaying the result as text
-  })
-  #
-  #Render the total number of fatalities
-  output$fatalities <- renderText({
+    })                           #Render the total number of cases for the selected country and year range
+    #
+    #Render the total number of fatalities
+    output$fatalities <- renderText({
     fatalities <- sum(filtered_data()$Fatalities, na.rm = TRUE)  # Summing up fatalities
     paste("Total Fatalities:", fatalities)  # Displaying the result as text
-  })
-  #
-  #Render the outbreak plot for the Statistics panel
-  output$outbreak_plot <- renderPlot({
+    })         #Render the total number of fatalities 
+    #
+    #Render the outbreak plot for the Statistics panel
+    output$outbreak_plot <- renderPlot({
     avg_cases <- my_data_df %>%
       summarise(Average = mean(Cases, na.rm = TRUE)) %>%
       pull(Average)  # Calculate the average number of cases
@@ -169,11 +173,11 @@ server <- function(input, output, session) {
       geom_point(color = "red") +
       labs(title = "Top Outbreak Years", x = "Years", y = "Number of Cases") +
       theme_minimal()
-  })
+    })
   
-  #
-  #Render a Leaflet map for countries
-  output$world_map <- renderLeaflet({
+     #
+    #Render a Leaflet map for countries
+    output$world_map <- renderLeaflet({
     map <- leaflet(data = country_summary) %>%
       addTiles() %>%
       addCircleMarkers(
@@ -192,23 +196,22 @@ server <- function(input, output, session) {
     }
     
     map  # Return the created map
-  }) 
+    }) 
   
-  #
-  #Render a bar plot for the number of cases
-  output$Number_of_Cases <- renderPlot({
-    req(filtered_data())  # Ensure the filtered data is available
+    #
+    output$Number_of_Cases <- renderPlot({
+    req(filtered_data())  # Ensure the filtered data is available          #Render a bar plot for the number of cases 
     
-    # Bar plot for number of cases by year
+   
     ggplot(filtered_data(), aes(x = Year, y = Cases)) +
       geom_bar(stat = "identity", fill = "skyblue") +
       labs(title = paste("Number of Cases in", input$selectCountryData), x = "Years", y = "Number of Cases") +
       theme_minimal()
-  })
+    }) # Bar plot for number of cases by year
   
-  #
-  #Render a scatter plot for fatalities
-  output$Number_of_Fatalities <- renderPlot({
+    #
+    #Render a scatter plot for fatalities
+    output$Number_of_Fatalities <- renderPlot({
     req(filtered_data())  # Ensure the filtered data is available
     
     # Scatter plot for fatalities by year
@@ -216,11 +219,11 @@ server <- function(input, output, session) {
       geom_point(size = 3, color = "red") +
       labs(title = paste("Number of Fatalities in", input$selectCountryData), x = "Years", y = "Number of Fatalities") +
       theme_minimal()
-  })
+    })
   
-  #
-  #Render a line plot for the fatality rate
-  output$Fatality_Rate <- renderPlot({
+    #
+    #Render a line plot for the fatality rate
+    output$Fatality_Rate <- renderPlot({
     req(filtered_data())  # Ensure the filtered data is available
     
     # Line plot for fatality rate over the years
@@ -228,19 +231,19 @@ server <- function(input, output, session) {
       geom_line(aes(y = (Fatalities / Cases) * 100, color = "Fatality Rate")) +
       labs(title = paste("Fatality Rate in", input$selectCountryData), x = "Years", y = "Fatality Rate (%)") +
       theme_minimal()
-  })
+    })
   
-  #
-  #Report generation: Allows downloading a report based on the selected country and year range
-  output$download_report <- downloadHandler(
+    #
+    #Report generation: Allows downloading a report based on the selected country and year range
+    output$download_report <- downloadHandler(
     filename = function() {
       paste(input$selectCountryData, "-cholera-report.csv", sep = "")
     },
     content = function(file) {
       write.csv(filtered_data(), file)  # Write the filtered data to a CSV file
     }
-  )
-}
-#
-# Run the app
-shinyApp(ui = ui, server = server)
+    )
+    }
+    #
+    # Run the app
+    shinyApp(ui = ui, server = server)
