@@ -1,5 +1,7 @@
 # Cholera Data Insights (R Shiny web application)
 
+# Web Application Link: https://choleradatainsights.shinyapps.io/solve/
+
 # Loading required libraries:
 
     #library(shiny) # shiny: for building web applications 
