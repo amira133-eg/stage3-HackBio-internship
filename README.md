@@ -1,6 +1,6 @@
 # Cholera Data Insights (R Shiny web application)
 
-# Web Application Link: Cholera Data Insights
+# Web Application Link:  [Cholera Data Insights](https://choleradatainsights.shinyapps.io/solve/)
 
 # Loading required libraries:
 
@@ -18,7 +18,7 @@
 
     library(DT) # DT: to render DataTables in the UI
 
-    my_data <- read_excel("D:/stage3/cholera - geo.xlsx")  # to Read the Excel file into R. The dataset contains cholera data.
+    my_data <- read_excel("cholera - geo.xlsx")  # to Read the Excel file into R. The dataset contains cholera data.
 
     my_data_df <- as.data.frame(my_data)  # Converting the dataset to a data frame for easier manipulation.
 
