@@ -3,31 +3,22 @@
 # Loading required libraries:
 
     #library(shiny) # shiny: for building web applications 
+    
     #library(shinythemes)   # shinythemes: to apply themes for UI (User Interface)
 
-    library(shinythemes)   # shinythemes: to apply themes for UI (User Interface)
-
-
-     library(leaflet)  # leaflet: for interactive maps
-
+    library(leaflet)  # leaflet: for interactive maps
 
     library(ggplot2) # ggplot2: for creating plots and data visualizations
 
-
     library(dplyr) # dplyr: for data manipulation (e.g., filtering, summarizing)
-
 
     library(readxl) # readxl: to read Excel files
 
-
     library(DT) # DT: to render DataTables in the UI
-
 
     my_data <- read_excel("D:/stage3/cholera - geo.xlsx")  # to Read the Excel file into R. The dataset contains cholera data.
 
-    
     my_data_df <- as.data.frame(my_data)  # Converting the dataset to a data frame for easier manipulation.
-
 
     country_summary <- my_data_df %>%   #Summarizing the dataset by countries to calculate total cases, fatalities, and average geographic locations (longitude and latitude)    
     group_by(Countries) %>%
